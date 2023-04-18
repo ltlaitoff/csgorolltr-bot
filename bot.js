@@ -143,6 +143,7 @@ const getCards = () => {
 		}
 
 		devLog('cardClick: ', card)
+		card.click()
 	})
 }
 
@@ -229,6 +230,7 @@ const main = () => {
 			case KEYS.updateShowStatus: {
 				log('updateShowStatus')
 				updateShowCurrentBotStatus()
+				break
 			}
 
 			default:
