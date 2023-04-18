@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CSGOrolltr-bot
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Bot for csgorolltr.com
 // @author       ltlaitoff
 // @match        https://www.csgorolltr.com/en/withdraw/csgo/*
@@ -11,22 +11,63 @@
 
 'use strict'
 
-/*
-	BUTTONS:
-	Start/stop: 
-	Find yellow flash
-	Find green flash // Default
-	Enable/disable AUTO_WITHDRAW p
-*/
-
 /* Application main variables */
 const BOT_NAME = 'CSGOrolltr-bot'
 const DELAY = 1000
 const AUTO_WITHDRAW = false
-const UNTRACKED_NAMES = []
+
+// Add item type and item name filtration
+/*
+Format:
+const UNTRACKED = [
+	{
+		name: '',
+		brand: ''
+	}
+]
+
+Use null for notFilter by field
+
+{
+	name: null,
+	brand: 'sticker'
+}
+*/
+const UNTRACKED = [
+	{
+		name: null,
+		brand: null
+	},
+	{
+		name: null,
+		brand: null
+	},
+	{
+		name: null,
+		brand: null
+	},
+	{
+		name: null,
+		brand: null
+	},
+	{
+		name: null,
+		brand: null
+	},
+	{
+		name: null,
+		brand: null
+	},
+	{
+		name: null,
+		brand: null
+	}
+]
 
 const DEV = true
 const LOGS = true
+
+const ITEMS_PER_CYCLE = 2
 
 /* Get event.code from 'https://www.toptal.com/developers/keycode' website */
 const KEYS = {
@@ -34,6 +75,8 @@ const KEYS = {
 	findGreenFlash: 'KeyG',
 	findYellowFlash: 'KeyY',
 	findYellowWarning: 'KeyW',
+	findAll: 'KeyA',
+	findGreenFlashAndYellowWarning: 'KeyB',
 	updateShowStatus: 'KeyU'
 }
 
@@ -45,6 +88,12 @@ const FIND_MODES = {
 	yellowFlash: { color: '#facc15' },
 	yellowWarning: {
 		color: '#f87171'
+	},
+	all: {
+		color: '#f3f4f6'
+	},
+	greenFlashAndYellowWarning: {
+		color: '#7dd3fc'
 	}
 }
 
@@ -67,44 +116,63 @@ const log = (message, ...args) => {
 	}
 }
 
-const checkCardIconGetClasses = findMode => {
-	if (findMode === FIND_MODES.greenFlash) {
-		return 'text-success'
-	}
-
-	if (
-		findMode === FIND_MODES.yellowFlash ||
-		findMode === FIND_MODES.yellowWarning
-	) {
-		return 'text-warning'
-	}
+const _checkOnGreenFlash = (iconClassList, inlinesvg) => {
+	return (
+		iconClassList.contains('text-success') &&
+		inlinesvg === 'assets/icons/flash.svg'
+	)
 }
 
-const checkCardIconGetIcon = findMode => {
-	if (
-		findMode === FIND_MODES.yellowFlash ||
-		findMode === FIND_MODES.greenFlash
-	) {
-		return 'assets/icons/flash.svg'
-	}
+const _checkOnYellowFlash = (iconClassList, inlinesvg) => {
+	return (
+		iconClassList.contains('text-warning') &&
+		inlinesvg === 'assets/icons/flash.svg'
+	)
+}
 
-	if (findMode === FIND_MODES.yellowWarning) {
-		return 'assets/icons/warning.svg'
-	}
+const _checkOnYellowWarning = (iconClassList, inlinesvg) => {
+	return (
+		iconClassList.contains('text-warning') &&
+		inlinesvg === 'assets/icons/warning.svg'
+	)
 }
 
 const checkCardIcon = cardIcon => {
-	const classes = checkCardIconGetClasses(findMode)
+	if (findMode === FIND_MODES.all) {
+		return cardIcon
+	}
 
-	devLog('checkCardIcon classes = ', classes)
+	const iconClassList = cardIcon.classList
+	const inlinesvg = cardIcon.getAttribute('inlinesvg')
 
-	if (!cardIcon.classList.contains(classes)) return
+	if (
+		findMode === FIND_MODES.greenFlash &&
+		!_checkOnGreenFlash(iconClassList, inlinesvg)
+	) {
+		return
+	}
 
-	const icon = checkCardIconGetIcon(findMode)
+	if (
+		findMode === FIND_MODES.yellowFlash &&
+		!_checkOnYellowFlash(iconClassList, inlinesvg)
+	) {
+		return
+	}
 
-	devLog('checkCardIcon icon = ', icon)
+	if (
+		findMode === FIND_MODES.yellowWarning &&
+		!_checkOnYellowWarning(iconClassList, inlinesvg)
+	) {
+		return
+	}
 
-	if (cardIcon.getAttribute('inlinesvg') !== icon) return
+	if (
+		findMode === FIND_MODES.greenFlashAndYellowWarning &&
+		!_checkOnGreenFlash(iconClassList, inlinesvg) &&
+		!_checkOnYellowWarning(iconClassList, inlinesvg)
+	) {
+		return
+	}
 
 	return cardIcon
 }
@@ -126,24 +194,62 @@ const getCards = () => {
 
 	devLog(cards)
 
+	let counter = 0
+
 	cards.forEach(card => {
+		if (counter === ITEMS_PER_CYCLE) return
+
 		const cardIcon = card.querySelector('footer cw-icon')
-		devLog('cardIcon: ', cardIcon)
+		// devLog('cardIcon: ', cardIcon)
 
 		if (!checkCardIcon(cardIcon)) {
 			return
 		}
 
-		const cardName = card.querySelector('footer .name')
-		devLog('cardName: ', cardName)
+		const cardName = card.querySelector('footer .name').innerText
+		const cardBrand = card.querySelector('footer .brand').innerText
 
-		if (UNTRACKED_NAMES.includes(cardName.innerText)) {
-			log(`Skip ${cardName.innerText}`)
+		devLog('cardName: ', cardName)
+		devLog('cardBrand: ', cardBrand)
+
+		const UNTRACKED_res = UNTRACKED.reduce((acc, untrackedItem) => {
+			let result = false
+
+			if (untrackedItem.name !== null) {
+				devLog(
+					'untrackedItem.name !== null',
+					untrackedItem.name,
+					cardName,
+					untrackedItem.name === cardName
+				)
+
+				result = result || untrackedItem.name.trim() === cardName.trim()
+			}
+
+			if (untrackedItem.brand !== null) {
+				devLog(
+					'untrackedItem.brand !== null',
+					`'${untrackedItem.brand.trim()}'`,
+					`'${cardBrand.trim()}'`,
+					untrackedItem.brand.trim() === cardBrand.trim()
+				)
+
+				result = result || untrackedItem.brand.trim() === cardBrand.trim()
+			}
+
+			devLog('untrackedItem result = ', result)
+
+			return acc || result
+		}, false)
+
+		if (UNTRACKED_res) {
 			return
 		}
 
 		devLog('cardClick: ', card)
 		card.click()
+
+		counter++
 	})
 }
 
@@ -229,6 +335,20 @@ const main = () => {
 
 			case KEYS.updateShowStatus: {
 				log('updateShowStatus')
+				updateShowCurrentBotStatus()
+				break
+			}
+
+			case KEYS.findAll: {
+				log('findAll')
+				findMode = FIND_MODES.all
+				updateShowCurrentBotStatus()
+				break
+			}
+
+			case KEYS.findGreenFlashAndYellowWarning: {
+				log('findGreenFlashAndYellowWarning')
+				findMode = FIND_MODES.greenFlashAndYellowWarning
 				updateShowCurrentBotStatus()
 				break
 			}
