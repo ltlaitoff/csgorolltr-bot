@@ -36,31 +36,31 @@ Use null for notFilter by field
 const UNTRACKED = [
 	{
 		name: null,
-		brand: null
+		brand: 'Spectrum 2 Case'
 	},
 	{
 		name: null,
-		brand: null
+		brand: 'Winter Offensive Weapon Case'
 	},
 	{
 		name: null,
-		brand: null
+		brand: ''
 	},
 	{
 		name: null,
-		brand: null
+		brand: ''
 	},
 	{
 		name: null,
-		brand: null
+		brand: ''
 	},
 	{
 		name: null,
-		brand: null
+		brand: ''
 	},
 	{
 		name: null,
-		brand: null
+		brand: ''
 	}
 ]
 
@@ -177,6 +177,47 @@ const checkCardIcon = cardIcon => {
 	return cardIcon
 }
 
+const checkCardIsUntracked = (cardName, cardBrand) => {
+	return UNTRACKED.reduce((acc, untrackedItem) => {
+		if (acc === true) return acc
+
+		if (untrackedItem.name === null && untrackedItem.brand === null) {
+			return acc
+		}
+
+		let resultName = false
+		let resultBrand = false
+
+		console.log(cardName)
+
+		if (untrackedItem.name !== null) {
+			resultName = cardName.trim().includes(untrackedItem.name.trim())
+		}
+
+		if (untrackedItem.brand !== null) {
+			resultBrand = cardBrand.trim().includes(untrackedItem.brand.trim())
+		}
+
+		devLog(
+			`untrackedItem (${untrackedItem.name} | ${untrackedItem.brand}):\t| ${acc}`
+		)
+
+		if (untrackedItem.name !== null && untrackedItem.brand !== null) {
+			return acc || (resultName && resultBrand)
+		}
+
+		if (untrackedItem.name !== null && untrackedItem.brand === null) {
+			return acc || resultName
+		}
+
+		if (untrackedItem.name === null && untrackedItem.brand !== null) {
+			return acc || resultBrand
+		}
+
+		return false
+	}, false)
+}
+
 const getCards = () => {
 	const cardsGrid = document.getElementsByTagName('cw-withdraw-search-grid')[0]
 
@@ -200,7 +241,6 @@ const getCards = () => {
 		if (counter === ITEMS_PER_CYCLE) return
 
 		const cardIcon = card.querySelector('footer cw-icon')
-		// devLog('cardIcon: ', cardIcon)
 
 		if (!checkCardIcon(cardIcon)) {
 			return
@@ -212,40 +252,7 @@ const getCards = () => {
 		devLog('cardName: ', cardName)
 		devLog('cardBrand: ', cardBrand)
 
-		const UNTRACKED_res = UNTRACKED.reduce((acc, untrackedItem) => {
-			let resultName = false
-			let resultBrand = false
-
-			if (untrackedItem.name !== null) {
-				devLog(
-					'untrackedItem.name !== null',
-					untrackedItem.name,
-					cardName,
-					untrackedItem.name === cardName
-				)
-
-				resultName = untrackedItem.name.trim() === cardName.trim()
-			}
-
-			if (untrackedItem.brand !== null) {
-				devLog(
-					'untrackedItem.brand !== null',
-					`'${untrackedItem.brand.trim()}'`,
-					`'${cardBrand.trim()}'`,
-					untrackedItem.brand.trim() === cardBrand.trim()
-				)
-
-				resultBrand = untrackedItem.brand.trim() === cardBrand.trim()
-			}
-
-			devLog(
-				`untrackedItem ${untrackedItem.name}:\t\t${
-					resultName && resultBrand
-				}\t\t| ${acc}`
-			)
-
-			return acc || (resultName && resultBrand)
-		}, false)
+		const UNTRACKED_res = checkCardIsUntracked(cardName, cardBrand)
 
 		if (UNTRACKED_res) {
 			return
