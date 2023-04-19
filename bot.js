@@ -213,7 +213,8 @@ const getCards = () => {
 		devLog('cardBrand: ', cardBrand)
 
 		const UNTRACKED_res = UNTRACKED.reduce((acc, untrackedItem) => {
-			let result = false
+			let resultName = false
+			let resultBrand = false
 
 			if (untrackedItem.name !== null) {
 				devLog(
@@ -223,7 +224,7 @@ const getCards = () => {
 					untrackedItem.name === cardName
 				)
 
-				result = result || untrackedItem.name.trim() === cardName.trim()
+				resultName = untrackedItem.name.trim() === cardName.trim()
 			}
 
 			if (untrackedItem.brand !== null) {
@@ -234,12 +235,16 @@ const getCards = () => {
 					untrackedItem.brand.trim() === cardBrand.trim()
 				)
 
-				result = result || untrackedItem.brand.trim() === cardBrand.trim()
+				resultBrand = untrackedItem.brand.trim() === cardBrand.trim()
 			}
 
-			devLog('untrackedItem result = ', result)
+			devLog(
+				`untrackedItem ${untrackedItem.name}:\t\t${
+					resultName && resultBrand
+				}\t\t| ${acc}`
+			)
 
-			return acc || result
+			return acc || (resultName && resultBrand)
 		}, false)
 
 		if (UNTRACKED_res) {
