@@ -16,6 +16,7 @@ const BOT_NAME = 'CSGOrolltr-bot'
 const DELAY = 1000
 const AUTO_WITHDRAW = false
 
+const UNTRACKED_WEAR = ['HOLO', 'Minimal Wear']
 // Add item type and item name filtration
 /*
 Format:
@@ -36,31 +37,23 @@ Use null for notFilter by field
 const UNTRACKED = [
 	{
 		name: null,
-		brand: 'Spectrum 2 Case'
+		brand: null
 	},
 	{
 		name: null,
-		brand: 'Winter Offensive Weapon Case'
+		brand: null
 	},
 	{
 		name: null,
-		brand: ''
+		brand: null
 	},
 	{
 		name: null,
-		brand: ''
+		brand: null
 	},
 	{
 		name: null,
-		brand: ''
-	},
-	{
-		name: null,
-		brand: ''
-	},
-	{
-		name: null,
-		brand: ''
+		brand: null
 	}
 ]
 
@@ -190,6 +183,14 @@ const checkCardIsUntracked = (cardName, cardBrand) => {
 
 		console.log(cardName)
 
+		if (untrackedItem.name?.length === 0) {
+			untrackedItem.name = null
+		}
+
+		if (untrackedItem.brand?.length === 0) {
+			untrackedItem.brand = null
+		}
+
 		if (untrackedItem.name !== null) {
 			resultName = cardName.trim().includes(untrackedItem.name.trim())
 		}
@@ -215,6 +216,20 @@ const checkCardIsUntracked = (cardName, cardBrand) => {
 		}
 
 		return false
+	}, false)
+}
+
+const checkCardWear = wear => {
+	return UNTRACKED_WEAR.reduce((acc, item) => {
+		if (acc) return acc
+
+		const wears = wear.trim().toLowerCase().split(',')
+
+		const result = wears.reduce((acc, cur) => {
+			return acc || item.trim().toLowerCase() === cur.trim().toLowerCase()
+		}, false)
+
+		return acc || result
 	}, false)
 }
 
@@ -253,9 +268,30 @@ const getCards = () => {
 		devLog('cardBrand: ', cardBrand)
 
 		const UNTRACKED_res = checkCardIsUntracked(cardName, cardBrand)
+		console.log(
+			'🚀 ~ file: bot.js:265 ~ getCards ~ UNTRACKED_res:',
+			cardName,
+			cardBrand,
+			UNTRACKED_res
+		)
 
 		if (UNTRACKED_res) {
 			return
+		}
+
+		const cardWear = card.querySelector('cw-item-variant-details')
+		console.log('🚀 ~ file: bot.js:285 ~ getCards ~ cardWear:', cardWear)
+
+		if (cardWear) {
+			const checkWearOnUntracked = checkCardWear(cardWear.innerText)
+			console.log(
+				'🚀 ~ file: bot.js:289 ~ getCards ~ checkWearOnUntracked:',
+				checkWearOnUntracked
+			)
+
+			if (checkWearOnUntracked) {
+				return
+			}
 		}
 
 		devLog('cardClick: ', card)
