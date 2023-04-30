@@ -4,7 +4,7 @@
 // @version      0.2
 // @description  Bot for csgorolltr.com
 // @author       ltlaitoff
-// @match        https://www.csgorolltr.com/en/withdraw/csgo/*
+// @match        https://www.csgorolltr.com/en/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        none
 // ==/UserScript==
@@ -92,6 +92,9 @@ const FIND_MODES = {
 
 /* Can change FIND_MODES.greenFlash to FIND_MODES.(...) for set default */
 let findMode = FIND_MODES.greenFlash
+
+const TELEGRAM_BOT_TOKEN = ''
+const TELEGRAM_BOT_USER = -1
 
 /* Not touch */
 let WORKING = false
@@ -335,7 +338,48 @@ const intervalCallback = () => {
 
 	getCards()
 	autoWithdraw()
+
 	log('initialized')
+}
+
+/*
+	checkItemIsSell
+*/
+
+const checkItemIsSell = () => {
+	const diaglogs = document.getElementsByTagName('cw-deposit-joined-dialog')
+
+	if (diaglogs.length === 0) return
+	;[...diaglogs].forEach(dialog => {
+		devLog('🚀 ~ file: bot.js:432 ~ checkItemIsSell ~ dialog:', dialog)
+
+		if (!dialog) return
+
+		if (dialog.dataset['csgorolltrBotTgMessage'] === 'true') {
+			return
+		}
+
+		const h1 = dialog.querySelector('h1')
+
+		if (h1.textContent.toLowerCase() !== 'trade found') {
+			devLog('🚀 ~ file: bot.js:439 ~ checkItemIsSell ~ h1:', h1)
+			return
+		}
+
+		const brand = dialog.querySelector('.brand')?.textContent.trim() || ''
+		const name = dialog.querySelector('.name').textContent.trim()
+
+		const button = dialog.querySelector('button')
+		if (button.textContent.trim().toLowerCase() !== `yes, i'm ready`) {
+			devLog('🚀 ~ file: bot.js:449 ~ checkItemIsSell ~ button:', button)
+			return
+		}
+
+		sendTelegramBotMessage(`New trade! ${brand}${brand && ' |'} ${name}`)
+		dialog.dataset['csgorolltrBotTgMessage'] = true
+
+		return
+	})
 }
 
 /*
@@ -369,6 +413,26 @@ const autoGemDrop = () => {
 	return Promise.resolve()
 }
 
+/* 
+	Set tg message
+*/
+
+const sendTelegramBotMessage = text => {
+	const date = new Date(Date.now())
+	const currentTime = `${
+		date.getUTCHours() - date.getTimezoneOffset() / 60
+	}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`
+
+	const textForSend = `[${currentTime}] ${text}`
+
+	fetch(
+		`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_BOT_USER}&text=${textForSend}`,
+		{
+			method: 'POST'
+		}
+	)
+}
+
 /*
 	Main
 */
@@ -379,6 +443,12 @@ const main = () => {
 		await autoGemDrop()
 
 		setTimeout(autoGemDropFunction, 5000)
+	}, 5000)
+
+	setTimeout(async function checkItemIsSellFunction() {
+		checkItemIsSell()
+
+		setTimeout(checkItemIsSellFunction, 5000)
 	}, 5000)
 
 	setTimeout(() => {
