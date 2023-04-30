@@ -338,8 +338,48 @@ const intervalCallback = () => {
 	log('initialized')
 }
 
+/*
+	Auto gem block
+*/
+
+const autoGemDrop = () => {
+	const messageList = document.getElementsByTagName('cw-giveaway-message-list')
+	if (!messageList[0]) return Promise.resolve()
+
+	const buttons = [...messageList[0].querySelectorAll('button')]
+
+	let result = false
+
+	buttons.forEach(button => {
+		if (button.innerText.toLowerCase() === 'join giveaway') {
+			result = true
+			log('Click on join giveaway')
+			devLog('Click on join giveaway. Button: ', button)
+
+			button.click()
+		}
+	})
+
+	if (result) {
+		return new Promise(res => {
+			new setTimeout(() => res(), 60000)
+		})
+	}
+
+	return Promise.resolve()
+}
+
+/*
+	Main
+*/
 const main = () => {
 	log('initialized')
+
+	setTimeout(async function autoGemDropFunction() {
+		await autoGemDrop()
+
+		setTimeout(autoGemDropFunction, 5000)
+	}, 5000)
 
 	setTimeout(() => {
 		updateShowCurrentBotStatus()
