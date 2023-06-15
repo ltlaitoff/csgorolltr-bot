@@ -174,6 +174,9 @@ const checkCardIcon = cardIcon => {
 }
 
 const checkCardIsUntracked = (cardName, cardBrand) => {
+	devLog('checkCardIsUntracked: cardName', cardName)
+	devLog('checkCardIsUntracked: cardBrand', cardBrand)
+
 	return UNTRACKED.reduce((acc, untrackedItem) => {
 		if (acc === true) return acc
 
@@ -184,7 +187,7 @@ const checkCardIsUntracked = (cardName, cardBrand) => {
 		let resultName = false
 		let resultBrand = false
 
-		console.log(cardName)
+		// console.log(cardName)
 
 		if (untrackedItem.name?.length === 0) {
 			untrackedItem.name = null
@@ -249,7 +252,9 @@ const getCards = () => {
 	}
 
 	devLog(cardsGrid)
-	const cards = [...cardsGrid.getElementsByTagName('cw-item')]
+	const cards = [
+		...cardsGrid.querySelectorAll('cw-csgo-market-item-card .content')
+	]
 
 	devLog(cards)
 
@@ -258,39 +263,40 @@ const getCards = () => {
 	cards.forEach(card => {
 		if (counter === ITEMS_PER_CYCLE) return
 
-		const cardIcon = card.querySelector('footer cw-icon')
+		const cardIcon = card.children[0].children[2].querySelector('.cw-icon')
 
 		if (!checkCardIcon(cardIcon)) {
 			return
 		}
 
-		const cardName = card.querySelector('footer .name').innerText
-		const cardBrand = card.querySelector('footer .brand').innerText
+		const cardName = card.querySelector('label').textContent
+		const cardBrand =
+			card.querySelector('label').previousElementSibling.textContent
 
 		devLog('cardName: ', cardName)
 		devLog('cardBrand: ', cardBrand)
 
 		const UNTRACKED_res = checkCardIsUntracked(cardName, cardBrand)
-		console.log(
-			'🚀 ~ file: bot.js:265 ~ getCards ~ UNTRACKED_res:',
-			cardName,
-			cardBrand,
-			UNTRACKED_res
-		)
+		// console.log(
+		// 	'🚀 ~ file: bot.js:265 ~ getCards ~ UNTRACKED_res:',
+		// 	cardName,
+		// 	cardBrand,
+		// 	UNTRACKED_res
+		// )
 
 		if (UNTRACKED_res) {
 			return
 		}
 
 		const cardWear = card.querySelector('cw-item-variant-details')
-		console.log('🚀 ~ file: bot.js:285 ~ getCards ~ cardWear:', cardWear)
+		// console.log('🚀 ~ file: bot.js:285 ~ getCards ~ cardWear:', cardWear)
 
 		if (cardWear) {
 			const checkWearOnUntracked = checkCardWear(cardWear.innerText)
-			console.log(
-				'🚀 ~ file: bot.js:289 ~ getCards ~ checkWearOnUntracked:',
-				checkWearOnUntracked
-			)
+			// console.log(
+			// 	'🚀 ~ file: bot.js:289 ~ getCards ~ checkWearOnUntracked:',
+			// 	checkWearOnUntracked
+			// )
 
 			if (checkWearOnUntracked) {
 				return
