@@ -1,16 +1,16 @@
 /* Application main variables */
 const BOT_NAME = 'CSGOrolltr-bot'
-const DELAY = 1000
-const AUTO_WITHDRAW = false
-const ITEMS_PER_CYCLE = 2
+const DELAY = 500
+const AUTO_WITHDRAW = true
+const ITEMS_PER_CYCLE = 3
 
 /* Auto gem */
 const AUTO_GEM_DROP_DELAY = 5000
 const AUTO_ITEM_SELL_DELAY = 5000
 
 /* Logs */
-const DEV_LOGS = true
-const LOGS = true
+const DEV_LOGS = false
+const LOGS = false
 
 /* Telegram */
 const TELEGRAM_BOT_TOKEN = ''
@@ -52,7 +52,7 @@ const DEFAULT_FIND_MODE = FIND_MODES.greenFlash
 /* Filters */
 
 // Example: 'FN', 'MW', 'FT', 'WW', 'BS', 'Holo', 'Foil', 'Gold'
-const UNTRACKED_WEAR = ['FN', 'MW', 'FT', 'WW', 'BS', 'Holo', 'Foil']
+const UNTRACKED_WEAR = ['WW', 'BS']
 
 // Add item type and item name filtration
 
