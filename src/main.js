@@ -9,6 +9,7 @@ import {
 	UNTRACKED
 } from './config/config'
 import { startAutoGemDrop } from './controllers/auto-gem.controller'
+import { startCheckItemIsSell } from './controllers/item-is-sell.contoller'
 import { sendTelegramBotMessage } from './controllers/telegram.controller'
 
 import { log, devLog } from './helpers'
@@ -266,58 +267,13 @@ const intervalCallback = () => {
 }
 
 /*
-	checkItemIsSell
-*/
-
-const checkItemIsSell = () => {
-	const diaglogs = document.getElementsByTagName('cw-deposit-joined-dialog')
-
-	if (diaglogs.length === 0) return
-	;[...diaglogs].forEach(dialog => {
-		devLog('🚀 ~ file: bot.js:432 ~ checkItemIsSell ~ dialog:', dialog)
-
-		if (!dialog) return
-
-		if (dialog.dataset['csgorolltrBotTgMessage'] === 'true') {
-			return
-		}
-
-		const h1 = dialog.querySelector('h1')
-
-		if (h1.textContent.toLowerCase() !== 'trade found') {
-			devLog('🚀 ~ file: bot.js:439 ~ checkItemIsSell ~ h1:', h1)
-			return
-		}
-
-		const brand = dialog.querySelector('.brand')?.textContent.trim() || ''
-		const name = dialog.querySelector('.name').textContent.trim()
-
-		const button = dialog.querySelector('button')
-		if (button.textContent.trim().toLowerCase() !== `yes, i'm ready`) {
-			devLog('🚀 ~ file: bot.js:449 ~ checkItemIsSell ~ button:', button)
-			return
-		}
-
-		sendTelegramBotMessage(`New trade! ${brand}${brand && ' |'} ${name}`)
-		dialog.dataset['csgorolltrBotTgMessage'] = true
-
-		return
-	})
-}
-
-/*
 	Main
 */
 const main = () => {
 	log('initialized')
 
 	startAutoGemDrop()
-
-	setTimeout(async function checkItemIsSellFunction() {
-		checkItemIsSell()
-
-		setTimeout(checkItemIsSellFunction, 5000)
-	}, 5000)
+	startCheckItemIsSell()
 
 	setTimeout(() => {
 		updateShowCurrentBotStatus()
