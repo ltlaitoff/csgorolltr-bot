@@ -16,7 +16,8 @@ const BOT_NAME = 'CSGOrolltr-bot'
 const DELAY = 1000
 const AUTO_WITHDRAW = false
 
-const UNTRACKED_WEAR = ['HOLO', 'Minimal Wear']
+// Example: 'FN', 'MW', 'FT', 'WW', 'BS', 'Holo', 'Foil', 'Gold'
+const UNTRACKED_WEAR = ['FN', 'MW', 'FT', 'WW', 'BS', 'Holo', 'Foil']
 // Add item type and item name filtration
 /*
 Format:
@@ -229,13 +230,19 @@ const checkCardWear = wear => {
 	return UNTRACKED_WEAR.reduce((acc, item) => {
 		if (acc) return acc
 
-		const wears = wear.trim().toLowerCase().split(',')
+		const preparedItem = item.trim().toLowerCase()
 
-		const result = wears.reduce((acc, cur) => {
-			return acc || item.trim().toLowerCase() === cur.trim().toLowerCase()
-		}, false)
+		const preparedBaseWear = wear.trim().toLowerCase()
 
-		return acc || result
+		const splitedWear = preparedBaseWear.split(' - ')
+
+		if (splitedWear.length === 1) {
+			return acc || preparedItem === preparedBaseWear
+		}
+
+		const preparedFirstWear = splitedWear[0].trim().toLowerCase()
+
+		return acc || preparedItem === preparedFirstWear
 	}, false)
 }
 
@@ -288,11 +295,17 @@ const getCards = () => {
 			return
 		}
 
-		const cardWear = card.querySelector('cw-item-variant-details')
+		const cardWear = card.querySelector('.wear')
+		devLog('cardWear:', cardWear)
 		// console.log('🚀 ~ file: bot.js:285 ~ getCards ~ cardWear:', cardWear)
 
 		if (cardWear) {
 			const checkWearOnUntracked = checkCardWear(cardWear.innerText)
+			console.log(
+				'🚀 ~ file: bot.js:304 ~ getCards ~ checkWearOnUntracked:',
+				checkWearOnUntracked
+			)
+
 			// console.log(
 			// 	'🚀 ~ file: bot.js:289 ~ getCards ~ checkWearOnUntracked:',
 			// 	checkWearOnUntracked
