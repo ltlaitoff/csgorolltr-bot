@@ -4,7 +4,7 @@ function getBanner() {
 			`// ==UserScript==\n` +
 			`// @name         CSGOrolltr-bot\n` +
 			`// @namespace    http://tampermonkey.net/\n` +
-			`// @version      0.2\n` +
+			`// @version      1.0.0\n` +
 			`// @description  Bot for csgorolltr.com\n` +
 			`// @author       ltlaitoff\n` +
 			`// @match        https://www.csgorolltr.com/en/*\n` +
