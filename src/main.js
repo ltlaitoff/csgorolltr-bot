@@ -2,14 +2,14 @@ import {
 	DELAY,
 	AUTO_WITHDRAW,
 	ITEMS_PER_CYCLE,
-	TELEGRAM_BOT_TOKEN,
-	TELEGRAM_BOT_USER,
 	KEYS,
 	FIND_MODES,
 	DEFAULT_FIND_MODE,
 	UNTRACKED_WEAR,
 	UNTRACKED
 } from './config/config'
+import { startAutoGemDrop } from './controllers/auto-gem.controller'
+import { sendTelegramBotMessage } from './controllers/telegram.controller'
 
 import { log, devLog } from './helpers'
 
@@ -306,67 +306,12 @@ const checkItemIsSell = () => {
 }
 
 /*
-	Auto gem block
-*/
-
-const autoGemDrop = () => {
-	const messageList = document.getElementsByTagName('cw-giveaway-message-list')
-	if (!messageList[0]) return Promise.resolve()
-
-	const buttons = [...messageList[0].querySelectorAll('button')]
-
-	let result = false
-
-	buttons.forEach(button => {
-		if (button.innerText.toLowerCase() === 'join giveaway') {
-			result = true
-			log('Click on join giveaway')
-			devLog('Click on join giveaway. Button: ', button)
-
-			button.click()
-		}
-	})
-
-	if (result) {
-		return new Promise(res => {
-			new setTimeout(() => res(), 60000)
-		})
-	}
-
-	return Promise.resolve()
-}
-
-/* 
-	Set tg message
-*/
-
-const sendTelegramBotMessage = text => {
-	const date = new Date(Date.now())
-	const currentTime = `${
-		date.getUTCHours() - date.getTimezoneOffset() / 60
-	}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`
-
-	const textForSend = `[${currentTime}] ${text}`
-
-	fetch(
-		`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_BOT_USER}&text=${textForSend}`,
-		{
-			method: 'POST'
-		}
-	)
-}
-
-/*
 	Main
 */
 const main = () => {
 	log('initialized')
 
-	setTimeout(async function autoGemDropFunction() {
-		await autoGemDrop()
-
-		setTimeout(autoGemDropFunction, 5000)
-	}, 5000)
+	startAutoGemDrop()
 
 	setTimeout(async function checkItemIsSellFunction() {
 		checkItemIsSell()

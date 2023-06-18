@@ -4,6 +4,9 @@ const DELAY = 1000
 const AUTO_WITHDRAW = false
 const ITEMS_PER_CYCLE = 2
 
+/* Auto gem */
+const AUTO_GEM_DROP_DELAY = 5000
+
 /* Logs */
 const DEV_LOGS = true
 const LOGS = true
