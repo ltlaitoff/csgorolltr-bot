@@ -3,6 +3,7 @@ const { BannerPlugin } = require('./utils/BannerPlugin')
 const { getBanner } = require('./utils/getBanner')
 
 module.exports = {
+	mode: 'production',
 	entry: './src/main.js',
 	output: {
 		filename: 'main.js',
