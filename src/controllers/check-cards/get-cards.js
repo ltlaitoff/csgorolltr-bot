@@ -1,78 +1,8 @@
 import { devLog, log } from '../../helpers/logs'
-import { UNTRACKED, UNTRACKED_WEAR, ITEMS_PER_CYCLE } from '../../config/config'
+import { ITEMS_PER_CYCLE } from '../../config/config'
 import { checkCardIcon } from './check-card-icon'
-
-const checkCardIsUntracked = (cardName, cardBrand) => {
-	devLog('checkCardIsUntracked: cardName', cardName)
-	devLog('checkCardIsUntracked: cardBrand', cardBrand)
-
-	return UNTRACKED.reduce((acc, untrackedItem) => {
-		if (acc === true) return acc
-
-		if (untrackedItem.name === null && untrackedItem.brand === null) {
-			return acc
-		}
-
-		let resultName = false
-		let resultBrand = false
-
-		// console.log(cardName)
-
-		if (untrackedItem.name?.length === 0) {
-			untrackedItem.name = null
-		}
-
-		if (untrackedItem.brand?.length === 0) {
-			untrackedItem.brand = null
-		}
-
-		if (untrackedItem.name !== null) {
-			resultName = cardName.trim().includes(untrackedItem.name.trim())
-		}
-
-		if (untrackedItem.brand !== null) {
-			resultBrand = cardBrand.trim().includes(untrackedItem.brand.trim())
-		}
-
-		devLog(
-			`untrackedItem (${untrackedItem.name} | ${untrackedItem.brand}):\t| ${acc}`
-		)
-
-		if (untrackedItem.name !== null && untrackedItem.brand !== null) {
-			return acc || (resultName && resultBrand)
-		}
-
-		if (untrackedItem.name !== null && untrackedItem.brand === null) {
-			return acc || resultName
-		}
-
-		if (untrackedItem.name === null && untrackedItem.brand !== null) {
-			return acc || resultBrand
-		}
-
-		return false
-	}, false)
-}
-
-const checkCardWear = wear => {
-	return UNTRACKED_WEAR.reduce((acc, item) => {
-		if (acc) return acc
-
-		const preparedItem = item.trim().toLowerCase()
-
-		const preparedBaseWear = wear.trim().toLowerCase()
-
-		const splitedWear = preparedBaseWear.split(' - ')
-
-		if (splitedWear.length === 1) {
-			return acc || preparedItem === preparedBaseWear
-		}
-
-		const preparedFirstWear = splitedWear[0].trim().toLowerCase()
-
-		return acc || preparedItem === preparedFirstWear
-	}, false)
-}
+import { checkCardIsUntracked } from './check-card-is-untracked'
+import { checkCardWear } from './check-card-wear'
 
 const getCards = findMode => {
 	const cardsGrid = document.getElementsByTagName('cw-withdraw-search-grid')[0]
