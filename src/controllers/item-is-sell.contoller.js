@@ -1,5 +1,7 @@
 import { AUTO_ITEM_SELL_DELAY } from '../config/config'
 
+import { sendTelegramBotMessage } from './telegram.controller'
+
 const checkItemIsSell = () => {
 	const diaglogs = document.getElementsByTagName('cw-deposit-joined-dialog')
 
