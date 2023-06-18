@@ -2,9 +2,11 @@
 
 Hi! Its for bot for [csgorolltr](https://www.csgorolltr.com/en/withdraw/csgo/p2p) website.
 
-Bot possibilities: [link]()
-How to install? [link]()
-Bot configs: [link]()
+Bot possibilities: [link](https://github.com/ltlaitoff/csgorolltr-bot/blob/main/README.md#possibilities)
+
+How to install? [link](https://github.com/ltlaitoff/csgorolltr-bot/blob/main/README.md#possibilities)
+
+Bot configs: [link](https://github.com/ltlaitoff/csgorolltr-bot/blob/main/README.md#possibilities)
 
 If you wanna support me: <a href="https://www.buymeacoffee.com/ltlaitoff"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=ltlaitoff&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a> <a href="https://steamcommunity.com/tradeoffer/new/?partner=1117923836&token=OGmuhFb0"><img src="https://png2.cleanpng.com/sh/e19282bb49f411a4eff4b0814fde464f/L0KzQYm3V8E0N5ZngJH0aYP2gLBuTgN1bZJyRdV4bYD4hLb5Tflkd594Rd1ybHzogn74lfVmdl5nhNNsaz35cb39hb1kd6N1Rd54YXSwhLnsTfFvcZ5mjNt4bj24coWCVPM6P2drUalsNj61RYi8Vsk5OWI6S6MAM0C2SYK7VccyNqFzf3==/kisspng-steam-computer-icons-killer-queen-black-valve-corp-load-the-animation-5b494c976f97c6.2575698115315303914571.png" width="69px" /></a>
 
@@ -14,11 +16,10 @@ If you wanna support me: <a href="https://www.buymeacoffee.com/ltlaitoff"><img s
 - Auto click on get gems
 - Auto click 'Withdraw' after adding item to cart
 - Auto send message to telegram on you item is sold
--
 
 ## Installation
 
-We have two ways: [With default config] and [With custom config]
+We have two ways: [With default config](https://github.com/ltlaitoff/csgorolltr-bot/blob/mainREADME.md#possibilities) and [With custom config](https://github.com/ltlaitoff/csgorolltr-bot/blob/main/README.md#possibilities)
 
 For both paths we need an installed [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
@@ -58,7 +59,7 @@ Build command:
 npm run build
 ```
 
-After created built code go to [With default config] way
+After created built code go to [With default config](https://github.com/ltlaitoff/csgorolltr-bot/blob/webpack-install/README.md#possibilities) way
 
 ## Configs
 
