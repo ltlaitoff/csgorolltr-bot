@@ -11,6 +11,7 @@
 	"author": "ltlaitoff",
 	"license": "ISC",
 	"devDependencies": {
+		"eslint": "^8.43.0",
 		"webpack": "^5.87.0",
 		"webpack-cli": "^5.1.4"
 	}

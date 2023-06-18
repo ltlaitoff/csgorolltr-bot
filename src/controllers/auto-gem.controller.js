@@ -1,4 +1,5 @@
 import { AUTO_GEM_DROP_DELAY } from '../config/config'
+import { devLog, log } from '../helpers/logs'
 
 const AUTO_GEM_DROP_DELAY_ON_CLICK = 60000
 
