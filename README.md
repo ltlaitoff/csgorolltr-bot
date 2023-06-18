@@ -28,7 +28,7 @@ For both paths we need an installed [Tampermonkey](https://chrome.google.com/web
 For install with default config we need:
 
 - Create new `script` in [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-- Copy built code from `./dist/main.js` file
+- Copy built code from [./dist/main.js](https://github.com/ltlaitoff/csgorolltr-bot/blob/main/dist/main.js) file
 - Put copied code into `Tampermonkey`
 - Go to `https://www.csgorolltr.com/en/withdraw/csgo/p2p` for test bot
 
