@@ -1,5 +1,5 @@
 import { AUTO_ITEM_SELL_DELAY } from '../config/config'
-import { devLog } from '../helpers/logs'
+import { devLog, log } from '../helpers/logs'
 
 import { sendTelegramBotMessage } from './telegram.controller'
 
@@ -20,11 +20,14 @@ const checkItemIsSell = () => {
 
 		if (h1.textContent.toLowerCase() !== 'trade found') {
 			devLog('🚀 ~ file: bot.js:439 ~ checkItemIsSell ~ h1:', h1)
+			log('cw-deposit-joined-dialog without h1 = trade found. Check devLog')
 			return
 		}
 
-		const brand = dialog.querySelector('.brand')?.textContent.trim() || ''
-		const name = dialog.querySelector('.name').textContent.trim()
+		const name = dialog.querySelector('label').textContent.trim() || ''
+		const brand =
+			dialog.querySelector('label').previousElementSibling.textContent.trim() ||
+			''
 
 		const button = dialog.querySelector('button')
 		if (button.textContent.trim().toLowerCase() !== `yes, i'm ready`) {
