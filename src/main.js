@@ -1,4 +1,10 @@
-import { DELAY, KEYS, FIND_MODES, DEFAULT_FIND_MODE } from './config/config'
+import {
+	DELAY,
+	KEYS,
+	FIND_MODES,
+	DEFAULT_FIND_MODE,
+	AUTO_WITHDRAW_DELAY
+} from './config/config'
 import { startAutoGemDrop } from './controllers/auto-gem.controller'
 import { autoWithdraw } from './controllers/auto-withdraw.controller'
 import { getCards } from './controllers/check-cards/get-cards'
@@ -23,10 +29,15 @@ const updateShowCurrentBotStatus = () => {
 	button.style.background = `linear-gradient(to left, ${findMode.color} 50%, ${LEFT_COLOR} 50%)`
 }
 
-const intervalCallback = () => {
+const intervalCallback = async () => {
 	if (!WORKING) return
 
 	getCards(findMode)
+
+	await new Promise(resolve => {
+		setTimeout(resolve, AUTO_WITHDRAW_DELAY)
+	})
+
 	autoWithdraw()
 
 	log('initialized')

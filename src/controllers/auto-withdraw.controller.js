@@ -4,11 +4,15 @@ import { devLog, log } from '../helpers/logs'
 const autoWithdraw = () => {
 	if (!AUTO_WITHDRAW) return
 
-	const WITHDRAW_CLASSNAME = '.mat-button-wrapper'
-	const WITHDRAW_TEXT = 'WITHDRAW'
+	const WITHDRAW_TEXT = 'withdraw'
 
-	document.querySelectorAll(WITHDRAW_CLASSNAME).forEach(element => {
-		if (element.innerText === WITHDRAW_TEXT) {
+	const withdraw = document
+		.querySelector('cw-trade-sidebar')
+		?.querySelector('header')
+		?.querySelectorAll('button')
+
+	withdraw.forEach(element => {
+		if (element.innerText.toLowerCase() === WITHDRAW_TEXT) {
 			log('Click on withdraw')
 			devLog('Click on withdraw. Element: ', element)
 

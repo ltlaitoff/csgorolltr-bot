@@ -4,9 +4,10 @@ const DELAY = 500
 const AUTO_WITHDRAW = true
 const ITEMS_PER_CYCLE = 3
 
-/* Auto gem */
+/* Delays */
 const AUTO_GEM_DROP_DELAY = 5000
 const AUTO_ITEM_SELL_DELAY = 5000
+const AUTO_WITHDRAW_DELAY = 400
 
 /* Logs */
 const DEV_LOGS = false
@@ -112,5 +113,6 @@ export {
 	UNTRACKED_WEAR,
 	UNTRACKED,
 	AUTO_GEM_DROP_DELAY,
-	AUTO_ITEM_SELL_DELAY
+	AUTO_ITEM_SELL_DELAY,
+	AUTO_WITHDRAW_DELAY
 }

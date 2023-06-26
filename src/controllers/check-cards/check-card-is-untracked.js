@@ -15,8 +15,6 @@ const checkCardIsUntracked = (cardName, cardBrand) => {
 		let resultName = false
 		let resultBrand = false
 
-		// console.log(cardName)
-
 		if (untrackedItem.name?.length === 0) {
 			untrackedItem.name = null
 		}

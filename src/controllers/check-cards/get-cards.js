@@ -28,9 +28,9 @@ const getCards = findMode => {
 	cards.forEach(card => {
 		if (counter === ITEMS_PER_CYCLE) return
 
-		const cardIcon = card.children[0].children[2].querySelector('.cw-icon')
+		const cardIcon = card.children[0]?.children[2]?.querySelector('.cw-icon')
 
-		if (!checkCardIcon(cardIcon, findMode)) {
+		if (!cardIcon || !checkCardIcon(cardIcon, findMode)) {
 			return
 		}
 
@@ -42,12 +42,6 @@ const getCards = findMode => {
 		devLog('cardBrand: ', cardBrand)
 
 		const UNTRACKED_res = checkCardIsUntracked(cardName, cardBrand)
-		// console.log(
-		// 	'🚀 ~ file: bot.js:265 ~ getCards ~ UNTRACKED_res:',
-		// 	cardName,
-		// 	cardBrand,
-		// 	UNTRACKED_res
-		// )
 
 		if (UNTRACKED_res) {
 			return
@@ -55,20 +49,9 @@ const getCards = findMode => {
 
 		const cardWear = card.querySelector('.wear')
 		devLog('cardWear:', cardWear)
-		// console.log('🚀 ~ file: bot.js:285 ~ getCards ~ cardWear:', cardWear)
 
 		if (cardWear) {
 			const checkWearOnUntracked = checkCardWear(cardWear.innerText)
-			console.log(
-				'🚀 ~ file: bot.js:304 ~ getCards ~ checkWearOnUntracked:',
-				checkWearOnUntracked
-			)
-
-			// console.log(
-			// 	'🚀 ~ file: bot.js:289 ~ getCards ~ checkWearOnUntracked:',
-			// 	checkWearOnUntracked
-			// )
-
 			if (checkWearOnUntracked) {
 				return
 			}
