@@ -28,9 +28,15 @@ const getCards = findMode => {
 	cards.forEach(card => {
 		if (counter === ITEMS_PER_CYCLE) return
 
-		const cardIcon = card.children[0]?.children[2]?.querySelector('.cw-icon')
+		const cardIcons = card.querySelectorAll('.cw-icon')
 
-		if (!cardIcon || !checkCardIcon(cardIcon, findMode)) {
+		devLog(cardIcons)
+
+		if (
+			!cardIcons ||
+			cardIcons.length === 0 ||
+			[...cardIcons].every(cardIcon => !checkCardIcon(cardIcon, findMode))
+		) {
 			return
 		}
 

@@ -1,4 +1,5 @@
 import { FIND_MODES } from '../../config/config'
+import { devLog } from '../../helpers'
 
 const checkOnGreenFlash = (iconClassList, inlinesvg) => {
 	return (
@@ -28,6 +29,8 @@ const checkCardIcon = (cardIcon, findMode) => {
 
 	const iconClassList = cardIcon.classList
 	const inlinesvg = cardIcon.getAttribute('inlinesvg')
+
+	devLog(cardIcon, iconClassList, inlinesvg)
 
 	if (
 		findMode === FIND_MODES.greenFlash &&

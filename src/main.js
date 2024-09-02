@@ -17,7 +17,7 @@ let interval = null
 let findMode = DEFAULT_FIND_MODE
 
 const updateShowCurrentBotStatus = () => {
-	const button = document.querySelector('[data-cy="trade-withdraw-button"]')
+	const button = document.querySelector('.user-balance')
 
 	if (!button) {
 		log('Not found trade-withdraw-button')
@@ -54,7 +54,7 @@ const main = () => {
 
 	setTimeout(() => {
 		updateShowCurrentBotStatus()
-	}, 1500)
+	}, 5000)
 
 	document.addEventListener('keypress', event => {
 		devLog('Pressed key', event.code)
